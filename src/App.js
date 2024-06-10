@@ -36,6 +36,30 @@ function App() {
       });
     }
   };
+
+  const commaClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHtml;
+
+    setCalc({
+      ...calc,
+      num: !calc.num.toString().includes(".") ? calc.num + value : calc.num,
+    });
+  };
+
+  const signClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHtml;
+
+    setCalc({
+      ...calc,
+      sign: value,
+      res: !calc.res && calc.num ? calc.num : calc.res,
+      num: 0,
+    });
+  };
+
+  
   return (
     <Wrapper>
       <Screen value={calc.num ? calc.num : calc.res} />
