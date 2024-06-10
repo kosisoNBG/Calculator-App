@@ -1,24 +1,71 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import Wrapper from "./components/Wrapper";
+import Screen from "./components/Screen";
+import ButtonBox from "./components/ButtonBox";
+import Button from "./components/Button";
+
+const btnValues = [
+  ["C", "+-", "%", "/"],
+  [7, 8, 9, "X"],
+  [4, 5, 6, "-"],
+  [1, 2, 3, "+"],
+  [0, ".", "="],
+];
 
 function App() {
+  let [calc, setCalc] = useState({
+    sign: "",
+    num: 0,
+    res: 0,
+  })
+
+  const numClickHandler = (e) => {
+    e.preventDefault();
+    const value = e.target.innerHtml;
+
+    if (calc.num.length < 16) {
+      setCalc({
+        ...calc,
+        num:
+        calc.num === 0 && value === "0"
+        ? "0"
+        : calc.num % 1 === 0
+        ? Number(calc.num + value)
+        : calc.num + value,
+      res: !calc.sign ? 0 : calc.res,
+      });
+    }
+  };
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Wrapper>
+      <Screen value={calc.num ? calc.num : calc.res} />
+      <ButtonBox>
+          {
+            btnValues.flat().map((btn, i) => {
+              return(
+                <Button 
+                key={i}
+               className={btn === "=" ? "equals" : ""} value={btn} onClick={
+                btn === "C"
+                ? resetClickHandler
+                : btn === "+-"
+                ? invertClickHandler
+                : btn === "%"
+                ? percentClickHandler
+                : btn === "="
+                ? equalsClickHandler
+                : btn === "/" || btn === "X" || btn === "-" || btn === "+"
+                ? signClickHandler
+                : btn === "."
+                ? commaClickHandler
+                : numClickHandler
+               } />
+              )
+            })
+          }
+      
+      </ButtonBox>
+    </Wrapper>
   );
 }
 
